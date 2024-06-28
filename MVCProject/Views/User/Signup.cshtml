@@ -1,0 +1,199 @@
+﻿@model MVCProject.Models.User
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register as User</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .modal-dialog {
+            background-color: white;
+            width: 900px;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            margin: 0;
+            font-size: 1.25em;
+        }
+
+        .close {
+            font-size: 1.5em;
+            cursor: pointer;
+            border: none;
+            background: none;
+        }
+
+        .image-preview-label {
+            text-align: center;
+            margin-bottom: 10px;
+        }
+
+        .image-preview {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 150px;
+            width: 150px;
+            background-color: #f0f0f0;
+            border-radius: 50%;
+            margin: 0 auto 15px auto;
+            overflow: hidden;
+        }
+
+        .image-preview img {
+            display: none;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .form-group {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+            .form-group label {
+                width: 30%;
+                margin-right: 10px;
+                text-align: left;
+            }
+
+            .form-group input {
+                width: 40%;
+                padding: 8px 10px;
+                font-size: 1em;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+            }
+
+            .form-group .text-danger {
+                width: 30%;
+                margin-left: 10px;
+            }
+
+            .form-group.file-input {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .form-group.file-input label {
+                width: 100%;
+                text-align: center;
+                margin-bottom: 10px;
+            }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px;
+            font-size: 1em;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+            .btn:hover {
+                background-color: #0056b3;
+            }
+    </style>
+</head>
+<body>
+    <div class="modal-dialog">
+        <div class="modal-content register-modal">
+            <div class="modal-header">
+                <h5 class="modal-title">Register as User</h5>
+                <button type="button" class="close" onclick="closeModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                @using (Html.BeginForm("Signup", "User", FormMethod.Post))
+                {
+                    @Html.AntiForgeryToken()
+                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+                    <div class="form-group file-input">
+                        <label for="profilePic" class="image-preview-label">Image Preview</label>
+                        <div class="image-preview">
+                            <img src="" id="imgPreview" alt="Image Preview">
+                        </div>
+                        <label for="profilePic" class="image-preview-label">Your Profile Pic</label>
+                        <input type="file" id="profilePic" name="ProfilePic" accept="image/*" onchange="loadFile(event)">
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.username)
+                        @Html.TextBoxFor(model => model.username, new { placeholder = "User Name", htmlAttributes = new { @class = "form-control", autocomplete ="off" } })
+                        @Html.ValidationMessageFor(model => model.username, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.email)
+                        @Html.TextBoxFor(model => model.email, new { placeholder = "Email Id", htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                        @Html.ValidationMessageFor(model => model.email, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.password)
+                        @Html.PasswordFor(model => model.password, new { placeholder = "Password", htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                        @Html.ValidationMessageFor(model => model.password, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.confirmedPassword)
+                        @Html.PasswordFor(model => model.confirmedPassword, new { placeholder = "Password", htmlAttributes = new { @class = "form-control", autocomplete = "off" } })
+                        @Html.ValidationMessageFor(model => model.confirmedPassword, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn">Sign up</button>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function loadFile(event) {
+            var image = document.getElementById('imgPreview');
+            image.src = URL.createObjectURL(event.target.files[0]);
+            image.style.display = 'block';
+        }
+
+        function closeModal() {
+            window.location.href = '@Url.Action("UserList", "User")';
+        }
+    </script>
+
+
+</body>
+</html>

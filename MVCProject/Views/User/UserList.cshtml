@@ -1,0 +1,24 @@
+﻿@model List<MVCProject.Models.User>
+
+<h2>Users</h2>
+<table class="table">
+    <thread>
+        <tr>
+            <th>UserID</th>
+            <th>Username</th>
+            <th>Email</th>
+        </tr>
+    </thread>
+    <tbody>
+        @foreach (var user in Model)
+            {
+                <tr>
+                    <td>@user.userid</td>
+                    <td>@user.username</td>
+                    <td>@user.email</td>
+                </tr>
+            }
+    </tbody>
+</table>
+
+@Html.ActionLink("Add New User", "Signup", "User", null, new {@class = "btn btn-primary"})
