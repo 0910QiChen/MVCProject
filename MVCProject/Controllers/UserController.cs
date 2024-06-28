@@ -36,6 +36,7 @@ namespace MVCProject.Controllers
             }
 
             userDAL.NewUser(user);
+            TempData["SuccessMessage"] = "User Registered Successfully!";
             return RedirectToAction("UserList");
         }
 
