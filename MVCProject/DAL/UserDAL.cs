@@ -7,6 +7,7 @@ using System.Web.Helpers;
 using MVCProject.Security;
 using MVCProject.Models;
 using System.Web.ModelBinding;
+using System.Linq;
 
 namespace MVCProject.DAL
 {
@@ -22,6 +23,7 @@ namespace MVCProject.DAL
         {
             List<User> userList = new List<User>();
 
+            // Data Reader
             try
             {
                 using (SqlConnection conn = new SqlConnection(ConnStr))
@@ -45,7 +47,33 @@ namespace MVCProject.DAL
                         }
                     }
                 }
-            } catch (SqlException e)
+            }
+            /* Data Adapter
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(ConnStr))
+                {
+                    string query = "SELECT UserID, UserName, Email FROM Users";
+
+                    SqlDataAdapter dataAdapter = new SqlDataAdapter(query, conn);
+                    DataSet dataset = new DataSet();
+                    dataAdapter.Fill(dataset, "Users");
+
+                    DataTable usersTable = dataset.Tables["Users"];
+
+                    foreach (DataRow row in usersTable.Rows)
+                    {
+                        User user = new User
+                        {
+                            userid = Convert.ToInt32(row["UserID"]),
+                            username = row["UserName"].ToString(),
+                            email = row["Email"].ToString()
+                        };
+                        userList.Add(user);
+                    }
+                }
+            }*/
+            catch (SqlException e)
             {
                 Console.WriteLine("SQL Error Occurred: " + e.Message);
                 throw;
