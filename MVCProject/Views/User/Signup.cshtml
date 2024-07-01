@@ -141,7 +141,7 @@
                 <button type="button" class="close" onclick="closeModal()">&times;</button>
             </div>
             <div class="modal-body">
-                @using (Html.BeginForm("Signup", "User", FormMethod.Post))
+                @using (Html.BeginForm("Signup", "User", FormMethod.Post, new { enctype = "multipart/form-data" }))
                 {
                     @Html.AntiForgeryToken()
                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
@@ -151,8 +151,8 @@
                         <div class="image-preview">
                             <img src="" id="imgPreview" alt="Image Preview">
                         </div>
-                        <label for="profilePic" class="image-preview-label">Your Profile Pic</label>
-                        <input type="file" id="profilePic" name="ProfilePic" accept="image/*" onchange="loadFile(event)">
+                        @Html.LabelFor(model => model.profilePic, new { @class = "form-control" })
+                        <input type="file" id="profilePic" name="profilePic" accept="image/*" onchange="loadFile(event)">
                     </div>
                     <div class="form-group">
                         @Html.LabelFor(model => model.username)

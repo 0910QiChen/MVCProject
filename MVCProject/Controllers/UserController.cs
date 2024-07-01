@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Configuration;
-using System.Linq;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Web;
 using System.Web.Mvc;
 using MVCProject.DAL;
@@ -19,7 +17,7 @@ namespace MVCProject.Controllers
         }
 
         [HttpPost]
-        public ActionResult Signup(User user)
+        public ActionResult Signup(User user, HttpPostedFileBase profilePic)
         {
             if (userDAL.IsEmailExists(user.email) == true)
             {
@@ -35,6 +33,18 @@ namespace MVCProject.Controllers
                 return View(user);
             }
 
+            if (profilePic != null && profilePic.ContentLength > 0)
+            {
+                string filename = Path.GetFileName(profilePic.FileName);
+                string uploadDir = Server.MapPath("~/Images/");
+                if (!Directory.Exists(uploadDir))
+                {
+                    Directory.CreateDirectory(uploadDir);
+                }
+                string path = Path.Combine(uploadDir, filename);
+                profilePic.SaveAs(path);
+                user.profilePicPath = path;
+            }
             userDAL.NewUser(user);
             TempData["SuccessMessage"] = "User Registered Successfully!";
             return RedirectToAction("UserList");

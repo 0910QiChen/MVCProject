@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
 using System.Collections.Generic;
-using System.Web.Helpers;
 using MVCProject.Security;
 using MVCProject.Models;
-using System.Web.ModelBinding;
-using System.Linq;
 
 namespace MVCProject.DAL
 {
@@ -28,7 +24,7 @@ namespace MVCProject.DAL
             {
                 using (SqlConnection conn = new SqlConnection(ConnStr))
                 {
-                    string query = "SELECT UserID, UserName, Email FROM Users";
+                    string query = "SELECT UserID, UserName, Email, PicturePath FROM Users";
 
                     SqlCommand cmd = new SqlCommand(query, conn);
 
@@ -41,7 +37,8 @@ namespace MVCProject.DAL
                             {
                                 userid = Convert.ToInt32(reader["UserID"]),
                                 username = Convert.ToString(reader["Username"]),
-                                email = Convert.ToString(reader["Email"])
+                                email = Convert.ToString(reader["Email"]),
+                                profilePicPath = Convert.ToString(reader["PicturePath"])
                             };
                             userList.Add(user);
                         }
@@ -91,13 +88,14 @@ namespace MVCProject.DAL
             {
                 try
                 {
-                    string query = "INSERT INTO Users (UserName, Password, Email) VALUES (@Username, @HashedPassword, @VerifiedEmail)";
+                    string query = "INSERT INTO Users (UserName, Password, Email, PicturePath) VALUES (@Username, @HashedPassword, @VerifiedEmail, @ProfilePath)";
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
                         string hashedPassword = PasswordSecurity.HashPassword(user.password);
                         cmd.Parameters.AddWithValue("@Username", user.username);
                         cmd.Parameters.AddWithValue("@HashedPassword", hashedPassword);
                         cmd.Parameters.AddWithValue("@VerifiedEmail", user.email);
+                        cmd.Parameters.AddWithValue("@ProfilePath", user.profilePicPath);
                         conn.Open();
                         cmd.ExecuteNonQuery();
                     }
